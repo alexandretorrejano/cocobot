@@ -1,1 +1,0 @@
-python -m streamlit run "FULL PATH HERE\cocobot\project_contents\Home.py" --server.port 8000 --server.address 127.0.0.2
