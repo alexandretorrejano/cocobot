@@ -1,0 +1,18 @@
+#environment
+.env
+
+#ffmpeg (required to have a static version of the ffmpeg executable)
+ffmpeg/
+
+#python cache files
+*.pyc
+
+#log folder
+logs/
+
+#sound folder
+sounds/
+
+#code to start the app
+cocobot_app.bat
+startup.sh
