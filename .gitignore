@@ -1,18 +1,19 @@
 #environment
 .env
 
-#ffmpeg (required to have a static version of the ffmpeg executable)
+#ffmpeg (required to have a downloaded version of the ffmpeg executable at project_contents/ffmpeg/ffmpeg.exe)
 ffmpeg/
 
-#python cache files
-*.pyc
-
-#log folder
-logs/
-
-#sound folder
+#sound folder should be added with the users sounds. subfolders should be discord user roles according to access rules. 
+#if no acess rules need to be enforced, put all the sounds in sounds/@everyone/
 sounds/
 
-#code to start the app
+#ignore python cache files
+*.pyc
+
+#ignore the log folder that is generated automatically
+logs/
+
+#ignore code to start the app
 cocobot_app.bat
 startup.sh
