@@ -210,15 +210,19 @@ with col1:
     default=[],
     )
 
+    voice_channels=os.getenv("voice_channels")
+    voice_channels=json.loads(voice_channels)
+
+    manual_trigger_channel=st.selectbox('Choose Voice Channel',voice_channels)
 
     df_selected_paths = df_files[df_files['File'].isin(checked_files) | df_files['Name'].isin(multiselect_files)]  
     selected_paths=df_selected_paths['Path'].tolist()
 
-
-    selected_paths_str = json.dumps(selected_paths)
-
-
-
+    manual_trigger_args={
+        "selected_paths": selected_paths,
+        "target_channel_name": manual_trigger_channel
+    }
+    manual_trigger_args_str = json.dumps(manual_trigger_args)
 
 
 
@@ -226,7 +230,7 @@ with col1:
         # When the button is pressed, run the subprocess
         with st.spinner():
             result = subprocess.run(
-            ['python', 'manual_trigger.py', selected_paths_str],  # Pass the JSON string to the subprocess
+            ['python', 'manual_trigger.py', manual_trigger_args_str],  # Pass the JSON string to the subprocess
             capture_output=True, 
             text=True
             )

@@ -26,18 +26,24 @@ sys.stdout = log_file
 # Redirect stderr to the file (optional)
 sys.stderr = log_file
 
+# Get the JSON string passed from the main script
+manual_trigger_args_str = sys.argv[1]  # Access the passed JSON string argument
+
+# Convert the JSON string back into a Python list of strings
+manual_trigger_args = json.loads(manual_trigger_args_str)
+
+
+target_channel_name=manual_trigger_args['target_channel_name']
+selected_paths=manual_trigger_args['selected_paths']
+
+
+
 sound_folder=os.getenv("sound_folder","sounds")
 volume_level=os.getenv("volume_level",0.5)
-target_channel_name=os.getenv("target_channel_name","")
 extra_channel_time_seconds=int(os.getenv("extra_channel_time_seconds",1))
 token=os.getenv("token_manual")
 
 
-# Get the JSON string passed from the main script
-selected_paths_str = sys.argv[1]  # Access the passed JSON string argument
-
-# Convert the JSON string back into a Python list of strings
-selected_paths = json.loads(selected_paths_str)
 
 print(selected_paths)
 # Global parameters
