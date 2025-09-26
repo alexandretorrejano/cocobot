@@ -15,5 +15,5 @@ sounds/
 logs/
 
 #ignore code to start the app
-cocobot_app.bat
+*.bat
 startup.sh

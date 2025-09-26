@@ -19,76 +19,12 @@ from dotenv import load_dotenv
 
 
 load_dotenv()
-SCRIPT_PATH = "random_trigger.py"  # Path to your random entrance script
 
-# Ensure session state exists
-if "script_pid" not in st.session_state:
-    st.session_state.script_pid = None
+
 if "log_lines" not in st.session_state:
     st.session_state.log_lines = []  # Stores console logs
 
     
-
-# Function to check if the script is running
-def is_script_running():
-    """Check if the stored PID is active."""
-    if st.session_state.script_pid:
-        try:
-            proc = psutil.Process(st.session_state.script_pid)
-            return proc.is_running()
-        except (psutil.NoSuchProcess, psutil.AccessDenied):
-            st.session_state.script_pid = None  # Reset if process is gone
-    return False
-
-# Function to read subprocess output in real-time
-def stream_output(process):
-    """Reads and stores output from the subprocess."""
-    if "log_lines" not in st.session_state:
-        st.session_state.log_lines = []  # Stores console logs
-
-    for line in iter(process.stdout.readline, ''):  # Reads line by line
-        st.session_state.log_lines.append(line.strip())  # Store log lines
-        st.rerun()  # Refresh UI to show new logs
-    process.stdout.close()
-
-# Function to start the script
-def start_script():
-    """Starts the script, captures output, and tracks PID."""
-    if not is_script_running():
-        try:
-            process = subprocess.Popen(
-                ["python", "-u", SCRIPT_PATH],  # `-u` forces unbuffered output
-                stdout=subprocess.PIPE,
-                stderr=subprocess.STDOUT,
-                text=True,  # Ensures text output (not bytes)
-                bufsize=1  # Line buffering
-            )
-            st.session_state.script_pid = process.pid
-            if "log_lines" not in st.session_state:
-                st.session_state.log_lines = []  # Stores console logs
-
-            st.session_state.log_lines.append(f"✅ Started script (PID: {process.pid})")
-
-            # Start a thread to capture logs
-            thread = threading.Thread(target=stream_output, args=(process,), daemon=True)
-            thread.start()
-        except Exception as e:
-            st.error(f"Failed to start script: {e}")
-
-# Function to stop the script
-def stop_script():
-    """Stops the script if it's running."""
-    if "log_lines" not in st.session_state:
-        st.session_state.log_lines = []  # Stores console logs
-
-    if is_script_running():
-        try:
-            os.kill(st.session_state.script_pid, 9)  # Force kill process
-            st.session_state.script_pid = None
-            st.session_state.log_lines.append("❌ Script stopped.")
-            st.rerun()
-        except Exception as e:
-            st.error(f"Error stopping script: {e}")
 
 def sample_dict(data: dict[str, list], n: int) -> dict[str, list]:
     return {
@@ -249,17 +185,7 @@ with col2:
     with text_col2:
         st.subheader("Cocobot Prime")  # Title next to image
 
-    # Check if script is running
-    script_running = is_script_running()
 
-    if not script_running:
-        start_script()
-        st.rerun()
-    else:
-        st.success(f"✅ Script is running! (PID: {st.session_state.script_pid})")
-        if st.button("Stop Script"):
-            stop_script()
-            st.rerun()
     if st.button("Refresh Console"):
         with open('logs/random_log.txt', 'r') as file:
             console_string = file.read()
